@@ -1,0 +1,6 @@
+# Optional: adds a "Service Mesh" menu to the OpenShift web console.
+apiVersion: kiali.io/v1alpha1
+kind: OSSMConsole
+metadata:
+  name: ossmconsole
+  namespace: openshift-operators

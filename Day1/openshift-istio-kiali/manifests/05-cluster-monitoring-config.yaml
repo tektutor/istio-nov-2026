@@ -1,0 +1,12 @@
+# WARNING: applying this replaces the whole ConfigMap.
+# If cluster-monitoring-config already exists, use
+#   oc edit configmap cluster-monitoring-config -n openshift-monitoring
+# and add "enableUserWorkload: true" instead.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cluster-monitoring-config
+  namespace: openshift-monitoring
+data:
+  config.yaml: |
+    enableUserWorkload: true
