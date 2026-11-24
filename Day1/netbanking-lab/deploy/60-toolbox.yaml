@@ -1,0 +1,31 @@
+# toolbox is a plain pod with curl. It plays "any other pod in the cluster".
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: toolbox
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: toolbox
+  labels:
+    app: toolbox
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: toolbox
+  template:
+    metadata:
+      labels:
+        app: toolbox
+    spec:
+      serviceAccountName: toolbox
+      containers:
+      - name: toolbox
+        image: registry.access.redhat.com/ubi9/ubi
+        command: ["sleep", "infinity"]
+        resources:
+          requests:
+            cpu: 10m
+            memory: 32Mi

@@ -1,0 +1,75 @@
+# web is the page customers open. Only 4 threads, so it runs out fast (Problem 3).
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: web
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-v1
+  labels:
+    app: web
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: web
+        version: v1
+    spec:
+      serviceAccountName: web
+      containers:
+      - name: web
+        image: netbanking:latest
+        env:
+        - name: SERVICE
+          value: web
+        - name: VERSION
+          value: v1
+        - name: THREADS      # web can serve only 4 requests at the same time
+          value: "4"
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 8080
+          timeoutSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          timeoutSeconds: 5
+        resources:
+          requests:
+            cpu: 50m
+            memory: 96Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web
+spec:
+  selector:
+    app: web
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: web
+spec:
+  to:
+    kind: Service
+    name: web
+  port:
+    targetPort: http

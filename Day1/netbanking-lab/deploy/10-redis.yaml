@@ -1,0 +1,51 @@
+# Redis stores the account balances.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: redis
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  labels:
+    app: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+        version: v1
+    spec:
+      serviceAccountName: redis
+      containers:
+      - name: redis
+        image: registry.redhat.io/rhel9/redis-7
+        ports:
+        - containerPort: 6379
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/redis/data
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+      volumes:
+      - name: data
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+spec:
+  selector:
+    app: redis
+  ports:
+  - name: tcp-redis        # "tcp-" tells Istio later that this is not HTTP
+    port: 6379
+    targetPort: 6379

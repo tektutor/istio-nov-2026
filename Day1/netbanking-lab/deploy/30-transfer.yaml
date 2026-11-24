@@ -1,0 +1,62 @@
+# transfer moves money: debit, credit, then SMS.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: transfer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transfer-v1
+  labels:
+    app: transfer
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: transfer
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: transfer
+        version: v1
+    spec:
+      serviceAccountName: transfer
+      containers:
+      - name: transfer
+        image: netbanking:latest
+        env:
+        - name: SERVICE
+          value: transfer
+        - name: VERSION
+          value: v1
+        - name: RESILIENT    # false = no timeout, no retry, no circuit breaker
+          value: "false"
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 8080
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+        resources:
+          requests:
+            cpu: 50m
+            memory: 96Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: transfer
+spec:
+  selector:
+    app: transfer
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
