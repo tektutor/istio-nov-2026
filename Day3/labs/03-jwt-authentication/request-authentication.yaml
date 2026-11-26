@@ -1,0 +1,14 @@
+apiVersion: security.istio.io/v1
+kind: RequestAuthentication
+metadata:
+  name: web
+spec:
+  selector:
+    matchLabels:
+      app: web
+  jwtRules:
+  - issuer: https://login.netbanking.tektutor.org
+    audiences:
+    - netbanking
+    jwks: |
+      {"keys": [{"kty": "RSA", "kid": "netbanking-2026", "alg": "RS256", "use": "sig", "n": "rKj6lhpDL8ZkyE9gUTl3pvX-eAv86LtwM541JtyI-32gmJPS2A_Nc-fVeS6e9yErwzWiSpe1r2-AJRHergzsCKjMC1UyWfYnm2xuaJpV2tF8LJxW-ZX_T9QDQx-ANlbzUhRHEPtwnyao99it76MAK66EQp_K_zcEBdVK787Ko-qjkL0v-Yl0ElsunPcsqLB7H5OhLxNvpVPDeXLwcbQWG4flOyq3HcbablIjGiHd_CIeZ7fBs0IXpgwA0fkpRokhQrXoYvnOBxcVGen6lECYQiiCOSTOq_aX5TbczKYNzt5m1EOIUJXn87BtLmUAOFk-CPqehNaMD3o8JijVO35PtQ", "e": "AQAB"}]}

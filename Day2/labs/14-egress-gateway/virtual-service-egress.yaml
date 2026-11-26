@@ -1,0 +1,31 @@
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: httpbin-via-egress
+spec:
+  hosts:
+  - httpbin.org
+  gateways:
+  - mesh                    # sidecars in this project
+  - netbanking-egress       # the egress gateway
+  tls:
+  # hop 1: sidecar -> egress gateway
+  - match:
+    - gateways: [mesh]
+      port: 443
+      sniHosts: [httpbin.org]
+    route:
+    - destination:
+        host: netbanking-egress
+        port:
+          number: 443
+  # hop 2: egress gateway -> internet
+  - match:
+    - gateways: [netbanking-egress]
+      port: 8443
+      sniHosts: [httpbin.org]
+    route:
+    - destination:
+        host: httpbin.org
+        port:
+          number: 443

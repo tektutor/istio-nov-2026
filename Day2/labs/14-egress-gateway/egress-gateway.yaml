@@ -1,0 +1,16 @@
+apiVersion: networking.istio.io/v1
+kind: Gateway
+metadata:
+  name: netbanking-egress
+spec:
+  selector:
+    istio: netbanking-egress
+  servers:
+  - port:
+      number: 8443
+      name: tls
+      protocol: TLS
+    tls:
+      mode: PASSTHROUGH     # do not decrypt, route by SNI
+    hosts:
+    - httpbin.org

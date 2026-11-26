@@ -1,0 +1,12 @@
+# Day 3, Lab 12: ask the transfer sidecar to keep and export the Envoy stats
+# of its connections to accounts. By default, Istio keeps only a small set of
+# Envoy stats, to save memory in every proxy.
+#   oc patch deploy/transfer-v1 -n $NS --type=merge --patch-file transfer-stats-patch.yaml
+spec:
+  template:
+    metadata:
+      annotations:
+        proxy.istio.io/config: |
+          proxyStatsMatcher:
+            inclusionPrefixes:
+            - "cluster.outbound|8080||accounts."

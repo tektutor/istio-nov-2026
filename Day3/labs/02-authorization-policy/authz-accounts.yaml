@@ -1,0 +1,36 @@
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: accounts
+spec:
+  selector:
+    matchLabels:
+      app: accounts
+  action: ALLOW             # deny everything not listed below
+  rules:
+  # Rule 1: only transfer may move money
+  - from:
+    - source:
+        principals:
+        - cluster.local/ns/NAMESPACE/sa/transfer
+    to:
+    - operation:
+        methods: ["POST"]
+        paths: ["*/debit", "*/credit"]
+  # Rule 2: web may only read balances
+  - from:
+    - source:
+        principals:
+        - cluster.local/ns/NAMESPACE/sa/web
+    to:
+    - operation:
+        methods: ["GET"]
+        paths: ["/api/accounts*"]
+  # Rule 3: toolbox may use the chaos switch (lab only)
+  - from:
+    - source:
+        principals:
+        - cluster.local/ns/NAMESPACE/sa/toolbox
+    to:
+    - operation:
+        paths: ["/admin/*"]

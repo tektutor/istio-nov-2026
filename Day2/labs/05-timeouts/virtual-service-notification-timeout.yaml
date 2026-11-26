@@ -1,0 +1,12 @@
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: notification
+spec:
+  hosts:
+  - notification
+  http:
+  - route:
+    - destination:
+        host: notification
+    timeout: 2s             # give up on the SMS after 2 seconds

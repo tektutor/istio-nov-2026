@@ -1,0 +1,9 @@
+apiVersion: networking.istio.io/v1
+kind: DestinationRule
+metadata:
+  name: accounts
+spec:
+  host: accounts
+  trafficPolicy:
+    tls:
+      mode: DISABLE         # the client sends plain text

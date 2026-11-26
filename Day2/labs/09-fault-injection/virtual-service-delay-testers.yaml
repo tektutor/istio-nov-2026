@@ -1,0 +1,23 @@
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: notification
+spec:
+  hosts:
+  - notification
+  http:
+  - match:                  # rule 1: only testers
+    - headers:
+        x-customer-tier:
+          exact: tester
+    fault:
+      delay:
+        fixedDelay: 3s      # add 3 seconds
+        percentage:
+          value: 100
+    route:
+    - destination:
+        host: notification
+  - route:                  # rule 2: everyone else, untouched
+    - destination:
+        host: notification

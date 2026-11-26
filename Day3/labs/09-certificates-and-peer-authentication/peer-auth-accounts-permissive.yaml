@@ -1,0 +1,10 @@
+apiVersion: security.istio.io/v1
+kind: PeerAuthentication
+metadata:
+  name: accounts
+spec:
+  selector:
+    matchLabels:
+      app: accounts         # workload level: beats the project
+  mtls:
+    mode: PERMISSIVE

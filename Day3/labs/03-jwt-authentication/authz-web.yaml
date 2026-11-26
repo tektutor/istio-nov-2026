@@ -1,0 +1,23 @@
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: web
+spec:
+  selector:
+    matchLabels:
+      app: web
+  action: ALLOW
+  rules:
+  # Rule 1: anyone may read the balance page
+  - to:
+    - operation:
+        methods: ["GET"]
+  # Rule 2: only a signed-in customer may send money
+  - from:
+    - source:
+        requestPrincipals:
+        - https://login.netbanking.tektutor.org/*
+    to:
+    - operation:
+        methods: ["POST"]
+        paths: ["/api/transfer", "/transfer"]

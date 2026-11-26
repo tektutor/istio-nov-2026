@@ -1,0 +1,12 @@
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: accounts
+spec:
+  hosts:
+  - accounts                # calls to http://accounts:8080
+  http:
+  - route:
+    - destination:
+        host: accounts
+        subset: v1          # everyone goes to v1

@@ -1,0 +1,12 @@
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: accounts
+spec:
+  hosts:
+  - accounts
+  http:
+  - route:
+    - destination:
+        host: accounts
+        subset: v3          # there is no subset v3

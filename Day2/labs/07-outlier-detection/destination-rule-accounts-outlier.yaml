@@ -1,0 +1,12 @@
+apiVersion: networking.istio.io/v1
+kind: DestinationRule
+metadata:
+  name: accounts
+spec:
+  host: accounts
+  trafficPolicy:
+    outlierDetection:
+      consecutive5xxErrors: 3      # 3 errors in a row ...
+      interval: 5s                 # ... checked every 5 seconds
+      baseEjectionTime: 60s        # ... removes the pod for 60 s
+      maxEjectionPercent: 50       # never remove more than half

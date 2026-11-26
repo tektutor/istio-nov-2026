@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-opt-in
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo
+  template:
+    metadata:
+      labels:
+        app: demo
+        sidecar.istio.io/inject: "true"
+    spec:
+      containers:
+      - name: app
+        image: registry.access.redhat.com/ubi9/ubi
+        command: ["sleep", "infinity"]

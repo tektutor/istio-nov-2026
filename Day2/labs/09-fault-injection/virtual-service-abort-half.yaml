@@ -1,0 +1,16 @@
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: notification
+spec:
+  hosts:
+  - notification
+  http:
+  - fault:
+      abort:
+        httpStatus: 503     # fail with HTTP 503 ...
+        percentage:
+          value: 50         # ... for half of all calls
+    route:
+    - destination:
+        host: notification

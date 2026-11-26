@@ -1,0 +1,15 @@
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: web
+spec:
+  hosts:
+  - GW_HOST
+  gateways:
+  - netbanking-gateway          # rules for traffic from the gateway
+  http:
+  - route:
+    - destination:
+        host: web
+        port:
+          number: 8080

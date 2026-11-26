@@ -1,0 +1,18 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: netbanking-gw
+  annotations:
+    # keep the gateway Service internal; an OpenShift Route
+    # gives it a public host name
+    networking.istio.io/service-type: ClusterIP
+spec:
+  gatewayClassName: istio
+  listeners:
+  - name: http
+    port: 80
+    protocol: HTTP
+    hostname: GW_HOST
+    allowedRoutes:
+      namespaces:
+        from: Same

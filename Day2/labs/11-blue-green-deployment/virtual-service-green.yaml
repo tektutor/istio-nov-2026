@@ -1,0 +1,20 @@
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: accounts
+spec:
+  hosts:
+  - accounts
+  http:
+  - match:                  # testers always see green
+    - headers:
+        x-customer-tier:
+          exact: tester
+    route:
+    - destination:
+        host: accounts
+        subset: v2
+  - route:                  # everyone else: v2
+    - destination:
+        host: accounts
+        subset: v2

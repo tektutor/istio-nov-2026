@@ -1,0 +1,30 @@
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: accounts
+spec:
+  hosts:
+  - accounts
+  http:
+  - name: one-account-on-v2      # rule 1: by URI
+    match:
+    - uri:
+        prefix: /api/accounts/ACC-1003
+    route:
+    - destination:
+        host: accounts
+        subset: v2
+  - name: preview-on-v2          # rule 2: by query parameter
+    match:
+    - queryParams:
+        preview:
+          exact: "yes"
+    route:
+    - destination:
+        host: accounts
+        subset: v2
+  - name: default                # rule 3: everything else
+    route:
+    - destination:
+        host: accounts
+        subset: v1

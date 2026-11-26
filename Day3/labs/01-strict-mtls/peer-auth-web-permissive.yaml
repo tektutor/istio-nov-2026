@@ -1,0 +1,10 @@
+apiVersion: security.istio.io/v1
+kind: PeerAuthentication
+metadata:
+  name: web
+spec:
+  selector:
+    matchLabels:
+      app: web              # only the web pods
+  mtls:
+    mode: PERMISSIVE        # accept mTLS and plain text

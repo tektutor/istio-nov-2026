@@ -1,0 +1,14 @@
+apiVersion: networking.istio.io/v1
+kind: Gateway
+metadata:
+  name: netbanking-gateway
+spec:
+  selector:
+    istio: netbanking-gateway   # which gateway pods
+  servers:
+  - port:
+      number: 8080
+      name: http
+      protocol: HTTP
+    hosts:
+    - GW_HOST                   # replaced when you apply

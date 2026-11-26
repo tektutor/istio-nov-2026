@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: accounts-tcp
+spec:
+  selector:
+    app: accounts
+  ports:
+  - name: tcp-api           # tells Istio: this is plain TCP
+    port: 8080
+    targetPort: 8080

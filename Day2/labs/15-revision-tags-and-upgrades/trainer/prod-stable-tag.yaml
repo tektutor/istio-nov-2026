@@ -1,0 +1,14 @@
+# TRAINER DEMO (cluster-admin), Day 2, Lab 15.
+# A revision tag is a stable name that projects use in place of a revision name.
+# prod-stable follows the Istio resource "default", so it always points to the
+# revision that is active now.
+#   oc apply -f prod-stable-tag.yaml
+#   oc get istiorevisiontag
+apiVersion: sailoperator.io/v1
+kind: IstioRevisionTag
+metadata:
+  name: prod-stable
+spec:
+  targetRef:
+    kind: Istio
+    name: default

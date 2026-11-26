@@ -1,0 +1,14 @@
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: deny-admin
+spec:
+  action: DENY              # checked before any ALLOW
+  rules:
+  - to:
+    - operation:
+        paths: ["/admin/*"]
+    from:
+    - source:
+        notPrincipals:
+        - cluster.local/ns/NAMESPACE/sa/toolbox

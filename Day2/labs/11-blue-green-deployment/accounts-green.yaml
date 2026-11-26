@@ -1,0 +1,46 @@
+# accounts v2: the "new release". It also returns the branch IFSC code.
+# Same app label as v1, so the accounts Service sends it traffic at once.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: accounts-v2
+  labels:
+    app: accounts
+    version: v2
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: accounts
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: accounts
+        version: v2
+    spec:
+      serviceAccountName: accounts
+      containers:
+      - name: accounts
+        image: netbanking:latest
+        env:
+        - name: SERVICE
+          value: accounts
+        - name: VERSION
+          value: v2
+        - name: REDIS_HOST
+          value: redis
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 8080
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+        resources:
+          requests:
+            cpu: 50m
+            memory: 96Mi

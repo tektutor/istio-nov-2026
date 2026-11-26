@@ -1,0 +1,15 @@
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: accounts
+spec:
+  hosts:
+  - accounts
+  http:
+  - match:                  # only staff, no default rule
+    - headers:
+        x-customer-tier:
+          exact: staff
+    route:
+    - destination:
+        host: accounts

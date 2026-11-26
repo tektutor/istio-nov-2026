@@ -1,0 +1,16 @@
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: notification
+spec:
+  hosts:
+  - notification
+  http:
+  - route:
+    - destination:
+        host: notification
+    timeout: 3s             # total time for the caller
+    retries:
+      attempts: 3
+      perTryTimeout: 2s     # 3 x 2s = 6s, more than 3s
+      retryOn: 5xx,reset,connect-failure

@@ -1,0 +1,22 @@
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-web
+spec:
+  selector:
+    matchLabels:
+      app: web              # the customer entry point
+  action: ALLOW
+  rules:
+  - {}                      # one empty rule: allow every request
+---
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-project
+spec:
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        namespaces: ["NAMESPACE"]   # pods of this project only

@@ -1,0 +1,33 @@
+# Scenario 6: an app that calls another service the moment it starts.
+# If the call fails, the container exits, as many real apps do when they
+# cannot load their settings or reach their database at start-up.
+# Apply it with your project name filled in:
+#   sed "s/NAMESPACE/$NS/g" app-startup-call.yaml | oc apply -n $LAB -f -
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-startup
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: startup
+  template:
+    metadata:
+      labels:
+        app: startup
+    spec:
+      containers:
+      - name: app
+        image: registry.access.redhat.com/ubi9/ubi
+        env:
+        - name: TARGET
+          value: http://web.NAMESPACE.svc.cluster.local:8080/healthz
+        command:
+        - sh
+        - -c
+        - |
+          code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 5 "$TARGET")
+          echo "startup call to $TARGET: HTTP $code"
+          [ "$code" = "200" ] || { echo "cannot reach $TARGET, exiting"; exit 1; }
+          sleep infinity

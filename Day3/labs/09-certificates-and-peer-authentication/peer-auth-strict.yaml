@@ -1,0 +1,7 @@
+apiVersion: security.istio.io/v1
+kind: PeerAuthentication
+metadata:
+  name: default             # "default" = the whole project
+spec:
+  mtls:
+    mode: STRICT            # accept mTLS only

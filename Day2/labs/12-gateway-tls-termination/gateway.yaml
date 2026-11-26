@@ -1,0 +1,17 @@
+apiVersion: networking.istio.io/v1
+kind: Gateway
+metadata:
+  name: netbanking-tls
+spec:
+  selector:
+    istio: netbanking-tls-gw
+  servers:
+  - port:
+      number: 8443
+      name: https
+      protocol: HTTPS
+    tls:
+      mode: SIMPLE                     # the gateway ends TLS
+      credentialName: netbanking-tls   # Secret with cert and key
+    hosts:
+    - TLS_HOST

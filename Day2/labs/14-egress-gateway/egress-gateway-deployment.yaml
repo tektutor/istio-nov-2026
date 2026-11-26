@@ -1,0 +1,33 @@
+# A gateway: a standalone Envoy at the edge of the mesh.
+# The injector replaces "image: auto" with the real proxy image.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: netbanking-egress
+spec:
+  selector:
+    matchLabels:
+      istio: netbanking-egress
+  template:
+    metadata:
+      annotations:
+        inject.istio.io/templates: gateway
+      labels:
+        istio: netbanking-egress
+        sidecar.istio.io/inject: "true"
+    spec:
+      containers:
+      - name: istio-proxy
+        image: auto
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: netbanking-egress
+spec:
+  selector:
+    istio: netbanking-egress
+  ports:
+  - name: tls
+    port: 443
+    targetPort: 8443

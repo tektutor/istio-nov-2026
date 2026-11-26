@@ -1,0 +1,7 @@
+apiVersion: networking.istio.io/v1
+kind: Sidecar
+metadata:
+  name: default             # applies to every pod in the project
+spec:
+  outboundTrafficPolicy:
+    mode: REGISTRY_ONLY     # only known destinations

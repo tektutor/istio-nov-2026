@@ -1,0 +1,38 @@
+# Traffic: requests per second to accounts
+sum(rate(istio_requests_total{reporter="destination",
+  destination_workload_namespace="NAMESPACE",
+  destination_service_name="accounts"}[1m]))
+
+# Errors: percentage of 5xx responses from accounts
+100 * sum(rate(istio_requests_total{reporter="destination",
+  destination_workload_namespace="NAMESPACE",
+  destination_service_name="accounts",
+  response_code=~"5.."}[1m]))
+/ sum(rate(istio_requests_total{reporter="destination",
+  destination_workload_namespace="NAMESPACE",
+  destination_service_name="accounts"}[1m]))
+
+# Latency: 95th percentile in milliseconds, per service
+histogram_quantile(0.95, sum by (le, destination_service_name)
+  (rate(istio_request_duration_milliseconds_bucket{
+  reporter="destination",
+  destination_workload_namespace="NAMESPACE"}[1m])))
+
+# Who calls whom, and how often
+sum by (source_workload, destination_workload)
+  (rate(istio_requests_total{reporter="source",
+  source_workload_namespace="NAMESPACE"}[1m]))
+
+# Errors per workload: which service answers with 5xx? (Step 6)
+sum by (destination_workload) (rate(istio_requests_total{
+  reporter="destination", destination_workload_namespace="NAMESPACE",
+  response_code=~"5.."}[1m]))
+
+# Errors per pod: which pod of that service? (Step 6)
+sum by (pod_name) (rate(istio_requests_total{
+  reporter="destination", namespace="NAMESPACE",
+  response_code=~"5.."}[1m]))
+
+# Open connections from each pod to accounts, from the Envoy stats (Step 7)
+sum by (pod_name) (envoy_cluster_upstream_cx_active{
+  namespace="NAMESPACE", cluster_name=~"outbound.*accounts.*"})

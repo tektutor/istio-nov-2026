@@ -1,0 +1,24 @@
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: accounts
+spec:
+  hosts:
+  - accounts
+  http:
+  - match:                  # rule 1: reads only
+    - method:
+        exact: GET
+    route:
+    - destination:
+        host: accounts
+        subset: v1          # customers get the v1 answer
+    mirror:
+      host: accounts
+      subset: v2            # a copy also goes to v2
+    mirrorPercentage:
+      value: 100
+  - route:                  # rule 2: writes, never mirrored
+    - destination:
+        host: accounts
+        subset: v1

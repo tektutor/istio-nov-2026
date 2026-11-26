@@ -1,0 +1,13 @@
+apiVersion: security.istio.io/v1
+kind: PeerAuthentication
+metadata:
+  name: accounts
+spec:
+  selector:
+    matchLabels:
+      app: accounts
+  mtls:
+    mode: STRICT            # all ports STRICT ...
+  portLevelMtls:
+    8080:
+      mode: PERMISSIVE      # ... except the container port 8080

@@ -1,0 +1,13 @@
+spec:
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/proxyCPU: "50m"
+        sidecar.istio.io/proxyMemory: "64Mi"
+        sidecar.istio.io/proxyCPULimit: "500m"
+        sidecar.istio.io/proxyMemoryLimit: "256Mi"
+        proxy.istio.io/config: |
+          concurrency: 2
+          holdApplicationUntilProxyStarts: true
+          terminationDrainDuration: 20s
+        traffic.sidecar.istio.io/excludeOutboundPorts: "6379"

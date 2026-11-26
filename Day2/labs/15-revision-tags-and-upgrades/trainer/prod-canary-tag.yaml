@@ -1,0 +1,14 @@
+# TRAINER DEMO (cluster-admin), Day 2, Lab 15. Use it only during an upgrade.
+# With updateStrategy RevisionBased, a new spec.version creates a second
+# IstioRevision, for example default-v1-31-2, next to the old one.
+# prod-canary points at that new revision, so a few projects can move to it first.
+#   oc get istiorevision                      # find the name of the new revision
+#   edit the name below, then: oc apply -f prod-canary-tag.yaml
+apiVersion: sailoperator.io/v1
+kind: IstioRevisionTag
+metadata:
+  name: prod-canary
+spec:
+  targetRef:
+    kind: IstioRevision
+    name: default-v1-31-2   # replace with the new revision name

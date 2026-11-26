@@ -1,0 +1,15 @@
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: accounts
+spec:
+  hosts:
+  - accounts
+  http:
+  - route:
+    - destination:
+        host: accounts
+    retries:
+      attempts: 5           # far too many
+      perTryTimeout: 1s
+      retryOn: 5xx

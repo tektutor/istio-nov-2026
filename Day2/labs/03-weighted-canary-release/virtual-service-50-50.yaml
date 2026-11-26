@@ -1,0 +1,17 @@
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: accounts
+spec:
+  hosts:
+  - accounts
+  http:
+  - route:
+    - destination:
+        host: accounts
+        subset: v1
+      weight: 50
+    - destination:
+        host: accounts
+        subset: v2
+      weight: 50
