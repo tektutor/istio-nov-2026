@@ -123,10 +123,12 @@ def transfer():
         return answer("FAILED", 503, step="credit", error=why, refund=refund)
 
     # 3. Send the SMS. Best effort: a failed SMS does not fail the transfer.
+    #    A 503 or 504 from the sidecar is an HTTP answer, not an exception,
+    #    so check the status code as well.
     try:
-        call("POST", f"{NOTIFICATION}/api/notify",
-             {"to": src, "text": f"{amount} sent to {dst}, ref {tid}"})
-        sms = "sent"
+        r = call("POST", f"{NOTIFICATION}/api/notify",
+                 {"to": src, "text": f"{amount} sent to {dst}, ref {tid}"})
+        sms = "sent" if r.status_code == 200 else f"skipped ({r.status_code})"
     except Exception:                             # noqa: BLE001
         sms = "skipped"
 

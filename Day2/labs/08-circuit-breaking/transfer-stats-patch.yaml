@@ -1,0 +1,12 @@
+# Day 2, Lab 8, Step 5: ask the transfer sidecar to keep the Envoy stats of its
+# calls to notification. By default, Istio keeps only a small set of Envoy
+# stats, to save memory in every proxy, and the overflow counter is not in it.
+#   oc patch deploy/transfer-v1 -n $NS --type=merge --patch-file transfer-stats-patch.yaml
+spec:
+  template:
+    metadata:
+      annotations:
+        proxy.istio.io/config: |
+          proxyStatsMatcher:
+            inclusionPrefixes:
+            - "cluster.outbound|8080||notification."

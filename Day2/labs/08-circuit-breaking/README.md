@@ -10,3 +10,4 @@ cd ~/istio-nov-2026/Day2/labs/08-circuit-breaking
 ## Files
 
 - `destination-rule-notification-pool.yaml`
+- `transfer-stats-patch.yaml`
